@@ -41,14 +41,42 @@ router.post("/estimate/create", async (req, res) => {
   }
 });
 
-// 2) ROUTE READ ********* //
+// 2) ROUTE READ ALL ********* //
 
 router.get("/estimate/", async (req, res) => {
   try {
-    //we get all the offers from the query filters (offer)
+    //we search all the estimates
     const estimates = await Estimate.find();
-    // We update the variable "available" if the date is exceeded
+    // we send the results
     res.json({ count: estimates.length, estimates: estimates });
+  } catch (error) {
+    // console.log(error);
+    res.status(400).json(error.message);
+  }
+});
+
+// 3) ROUTE READ ONE ********* //
+
+router.get("/estimate/:id", async (req, res) => {
+  try {
+    //we search the estimate by its id
+    const estimate = await Estimate.findById(req.params.id);
+    // we send the result
+    res.json({ estimate: estimate });
+  } catch (error) {
+    // console.log(error);
+    res.status(400).json(error.message);
+  }
+});
+
+// 4) ROUTE DELETE ONE ********* //
+
+router.get("/estimate/:id/delete", async (req, res) => {
+  try {
+    //we search the estimate by its id and delete it if we find it
+    const estimate = await Estimate.deleteOne({ _id: req.params.id });
+    // we send a success message
+    res.json({ message: "Le devis a bien été supprimé" });
   } catch (error) {
     // console.log(error);
     res.status(400).json(error.message);
