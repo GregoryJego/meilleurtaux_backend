@@ -71,7 +71,7 @@ router.get("/estimate/:id", async (req, res) => {
 
 // 4) ROUTE DELETE ONE ********* //
 
-router.get("/estimate/:id/delete", async (req, res) => {
+router.post("/estimate/:id/delete", async (req, res) => {
   try {
     //we search the estimate by its id and delete it if we find it
     const estimate = await Estimate.deleteOne({ _id: req.params.id });
