@@ -20,7 +20,7 @@ router.post("/estimate/create", async (req, res) => {
     } = req.fields;
 
     // FileNumber will be the fileNumber of the last saved estimate + 1
-    let fileNumber = 0;
+    let fileNumber = 1;
     const lastEstimatedSaved = await Estimate.findOne().sort({
       created_at: -1
     });
