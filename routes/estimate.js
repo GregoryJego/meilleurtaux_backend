@@ -19,7 +19,12 @@ router.post("/estimate/create", async (req, res) => {
       email
     } = req.fields;
 
-    const fileNumber = (await Estimate.countDocuments()) + 1;
+    // FileNumber will be the fileNumber of the last saved estimate + 1
+    let fileNumber = 0;
+    const lastEstimatedSaved = await Estimate.findOne().sort({
+      created_at: -1
+    });
+    if (lastEstimatedSaved) fileNumber = lastEstimatedSaved.fileNumber + 1;
 
     const newEstimate = new Estimate({
       fileNumber: fileNumber,
