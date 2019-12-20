@@ -13,11 +13,9 @@ router.post("/admin/create", async (req, res) => {
   const token = uid2(64);
   const salt = uid2(64);
   const hash = SHA256(req.fields.password + salt).toString(encBase64);
-  let emailAddress = req.fields.emailAddress;
 
   try {
     const newAdmin = await new Admin({
-      emailAddress: emailAddress,
       salt: salt,
       hash: hash,
       token: token
@@ -26,8 +24,7 @@ router.post("/admin/create", async (req, res) => {
     await newAdmin.save();
     res.json({
       _id: newAdmin._id,
-      token: newAdmin.token,
-      emailAddress: newAdmin.emailAddress
+      token: newAdmin.token
     });
   } catch (error) {
     res.status(400).json({ message: error.message });
@@ -37,9 +34,7 @@ router.post("/admin/create", async (req, res) => {
 // 2) ROUTE LOGIN ********* //
 
 router.post("/admin/login", async (req, res) => {
-  const findAdmin = await Admin.findOne({
-    emailAddress: req.fields.emailAddress
-  })
+  const findAdmin = await Admin.findOne()
     .select("+hash")
     .select("+salt")
     .select("+_id");
@@ -57,11 +52,9 @@ router.post("/admin/login", async (req, res) => {
         });
         // Wrong password
       } else {
-        return res
-          .status(401)
-          .json({
-            error: "Ce n'est pas le bon mot de passe. Veuillez réeesayer."
-          });
+        return res.status(401).json({
+          error: "Ce n'est pas le bon mot de passe. Veuillez réeesayer."
+        });
       }
       // We don't find the Admin account
     } else {
