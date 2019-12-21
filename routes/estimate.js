@@ -8,10 +8,6 @@ const DOMAIN = process.env.MAILGUN_DOMAIN;
 
 const mg = mailgun({ apiKey: API_KEY, domain: DOMAIN });
 
-function NumberWithSpaces(string) {
-  return string.replace(/\B(?=(\d{3})+(?!\d))/g, " ");
-}
-
 // 1) ROUTE CREATE ********* //
 
 router.post("/estimate/create", async (req, res) => {
@@ -84,19 +80,19 @@ router.post("/estimate/create", async (req, res) => {
           newEstimate.email +
           "\n" +
           "Montant du bien : " +
-          NumberWithSpaces(newEstimate.propertyAmount) +
+          newEstimate.propertyAmount +
           " €" +
           "\n" +
           "Montant des travaux : " +
-          NumberWithSpaces(newEstimate.worksAmount) +
+          newEstimate.worksAmount +
           " €" +
           "\n" +
           "Frais de notaire : " +
-          NumberWithSpaces(newEstimate.notaryFees) +
+          newEstimate.notaryFees +
           " €" +
           "\n" +
           "Budget total : " +
-          NumberWithSpaces(newEstimate.totalBudget) +
+          newEstimate.totalBudget +
           " €" +
           "\n\n" +
           "Bonne journée" +
