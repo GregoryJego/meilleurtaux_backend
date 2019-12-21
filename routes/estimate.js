@@ -1,6 +1,12 @@
 const express = require("express");
 const router = express.Router();
 const Estimate = require("../models/Estimate");
+const mailgun = require("mailgun-js");
+
+const API_KEY = process.env.MAILGUN_API_KEY;
+const DOMAIN = process.env.MAILGUN_DOMAIN;
+
+const mg = mailgun({ apiKey: API_KEY, domain: DOMAIN });
 
 // 1) ROUTE CREATE ********* //
 
@@ -41,6 +47,62 @@ router.post("/estimate/create", async (req, res) => {
     });
     await newEstimate.save();
     res.json(newEstimate.fileNumber);
+    mg.messages().send(
+      {
+        from: "Meilleurtaux <postmaster@" + DOMAIN + ">",
+        to: newEstimate.email,
+        subject: "Votre devis Meilleurtaux",
+        text:
+          "Bonjour," +
+          "\n" +
+          "veuillez trouver ci-dessous les informations concernant votre devis fait sur le site Meilleurtaux :" +
+          "\n\n" +
+          "Numéro de dossier : " +
+          newEstimate.fileNumber +
+          "\n" +
+          "Type de bien : " +
+          newEstimate.type +
+          "\n" +
+          "Etat du bien : " +
+          newEstimate.state +
+          "\n" +
+          "Usage du bien : " +
+          newEstimate.use +
+          "\n" +
+          "Localisation du bien : " +
+          newEstimate.location +
+          " , France" +
+          "\n" +
+          "Situation actuelle : " +
+          newEstimate.situation +
+          "\n" +
+          "Adresse email : " +
+          newEstimate.email +
+          "\n" +
+          "Montant du bien : " +
+          newEstimate.propertyAmount +
+          " €" +
+          "\n" +
+          "Montant des travaux : " +
+          newEstimate.worksAmount +
+          " €" +
+          "\n" +
+          "Frais de notaire : " +
+          newEstimate.notaryFees +
+          " €" +
+          "\n" +
+          "Budget total : " +
+          newEstimate.totalBudget +
+          " €" +
+          "\n\n" +
+          "Bonne journée" +
+          "\n\n" +
+          "Fait par Grégory JEGO @LeReacteur"
+      },
+      (error, body) => {
+        console.log(body);
+      }
+    );
   } catch (error) {
     res.status(400).json(error);
   }
