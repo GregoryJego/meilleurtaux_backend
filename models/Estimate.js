@@ -7,10 +7,10 @@ const Estimate = mongoose.model("Estimate", {
   use: { type: String, required: true },
   situation: { type: String, required: true },
   location: { type: String, required: true },
-  propertyAmount: { type: Number, required: true },
-  worksAmount: { type: Number, required: true },
-  notaryFees: { type: Number, required: true },
-  totalBudget: { type: Number, required: true },
+  propertyAmount: { type: String, required: true },
+  worksAmount: { type: String, required: true },
+  notaryFees: { type: String, required: true },
+  totalBudget: { type: String, required: true },
   email: { type: String, required: true }
 });
 
