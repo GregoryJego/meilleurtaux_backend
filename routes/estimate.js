@@ -8,6 +8,10 @@ const DOMAIN = process.env.MAILGUN_DOMAIN;
 
 const mg = mailgun({ apiKey: API_KEY, domain: DOMAIN });
 
+function NumberWithSpaces(string) {
+  return string.replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+}
+
 // 1) ROUTE CREATE ********* //
 
 router.post("/estimate/create", async (req, res) => {
@@ -54,8 +58,8 @@ router.post("/estimate/create", async (req, res) => {
         subject: "Votre devis Meilleurtaux",
         text:
           "Bonjour," +
-          "\n" +
-          "veuillez trouver ci-dessous les informations concernant votre devis fait sur le site Meilleurtaux :" +
+          "\n\n" +
+          "veuillez trouver ci-dessous les informations concernant votre devis :" +
           "\n\n" +
           "Numéro de dossier : " +
           newEstimate.fileNumber +
@@ -80,23 +84,25 @@ router.post("/estimate/create", async (req, res) => {
           newEstimate.email +
           "\n" +
           "Montant du bien : " +
-          newEstimate.propertyAmount +
+          NumberWithSpaces(newEstimate.propertyAmount) +
           " €" +
           "\n" +
           "Montant des travaux : " +
-          newEstimate.worksAmount +
+          NumberWithSpaces(newEstimate.worksAmount) +
           " €" +
           "\n" +
           "Frais de notaire : " +
-          newEstimate.notaryFees +
+          NumberWithSpaces(newEstimate.notaryFees) +
           " €" +
           "\n" +
           "Budget total : " +
-          newEstimate.totalBudget +
+          NumberWithSpaces(newEstimate.totalBudget) +
           " €" +
           "\n\n" +
           "Bonne journée" +
           "\n\n" +
+          "------" +
+          "\n" +
           "Fait par Grégory JEGO @LeReacteur"
       },
       (error, body) => {
